@@ -163,7 +163,7 @@ mod 'neutron', :ref => '13.3.1',                    :git => github + 'openstack/
 mod 'nova', :ref => '13.3.1',                       :git => github + 'openstack/puppet-nova'
 mod 'horizon', :ref => '13.3.1',                    :git => github + 'openstack/puppet-horizon'
 mod 'gnocchi', :ref => '13.3.1',                    :git => github + 'openstack/puppet-gnocchi'
-mod 'keystone', :ref => '13.3.1',                   :git => github + 'openstack/puppet-keystone'
+mod 'keystone', :ref => '14.4.0',                   :git => github + 'openstack/puppet-keystone'
 mod 'swift', :ref => 'norcams/ocata',               :git => github + 'norcams/puppet-swift'
 mod 'ceilometer', :ref => '13.3.1',                 :git => github + 'openstack/puppet-ceilometer'
 mod 'cloudkitty', :ref => '3.4.0',                  :git => github + 'openstack/puppet-cloudkitty'
