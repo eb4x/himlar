@@ -2,7 +2,7 @@
 class profile::openstack::network::controller(
   $manage_neutron_policies = true,
   $neutron_policy_path = '/etc/neutron/policy.json',
-  $neutron_nova_insecure = false,
+  $neutron_nova_insecure = true,
   $neutron_config = {},
   $manage_firewall = true,
   $firewall_extras = {}
@@ -13,16 +13,12 @@ class profile::openstack::network::controller(
   include ::neutron::server::notifications
 #  include ::neutron::wsgi::apache
   include ::neutron::config
+  include ::neutron::logging
 
   create_resources('neutron_config', $neutron_config)
 
   if $manage_neutron_policies {
-    Openstacklib::Policy::Base {
-      file_path => $neutron_policy_path,
-    }
-    $policy = lookup('profile::openstack::network::policies', Hash, 'first', {})
-    create_resources('openstacklib::policy::base', $policy)
-                #{ require => Class[::neutron::server] })
+    include ::neutron::policy
   }
 
   if $neutron_nova_insecure {
