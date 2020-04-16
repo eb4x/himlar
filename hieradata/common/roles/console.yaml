@@ -5,6 +5,8 @@ include:
     - profile::openstack::compute::consoleauth
     - profile::logging::rsyslog::client
 
+openstack_version: 'stein' #FIXME
+
 profile::base::common::packages:
   'bash-completion': {}
   'bash-completion-extras': {}
