@@ -7,6 +7,8 @@ include:
     - profile::openstack::openrc
     - profile::dns::rndc_key
 
+openstack_version: 'stein' #FIXME:stein
+
 profile::base::network::manage_dummy:        true
 
 profile::dns::rndc_key::create_admin_key:    false
