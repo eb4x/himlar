@@ -7,8 +7,7 @@ class profile::openstack::image(
 ) {
 
   include ::profile::openstack::image::api
-  include ::glance::api::logging
-
+  
   if $notify_enabled {
     include ::profile::openstack::image::notify
   }
