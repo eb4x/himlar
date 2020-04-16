@@ -7,7 +7,7 @@ class profile::openstack::image(
 ) {
 
   include ::profile::openstack::image::api
- 
+
   if $notify_enabled {
     include ::profile::openstack::image::notify
   }
