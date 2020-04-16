@@ -10,6 +10,8 @@ include:
     - profile::logging::rsyslog::client
     - profile::webserver::apache::status
 
+openstack_version: 'stein' #FIXME
+
 profile::base::common::packages:
   'python2-oslo-policy': {}
   'python2-keystonemiddleware': {}

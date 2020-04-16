@@ -19,7 +19,7 @@ cinder::wsgi::apache::workers:            4
 
 cinder::keystone::authtoken::username:            'cinder'
 cinder::keystone::authtoken::password:            "%{hiera('cinder_api_password')}"
-cinder::keystone::authtoken::auth_uri:            "%{hiera('endpoint__identity__internal')}"
+cinder::keystone::authtoken::www_auth_uri:        "%{hiera('endpoint__identity__internal')}"
 cinder::keystone::authtoken::auth_url:            "%{hiera('endpoint__identity__admin')}/v3"
 cinder::keystone::authtoken::region_name:         "%{::location}"
 cinder::keystone::authtoken::memcached_servers:   '127.0.0.1:11211'
@@ -47,8 +47,8 @@ cinder::keystone::auth::internal_url_v3:        "%{hiera('endpoint__volume__inte
 cinder::default_transport_url:         "rabbit://cinder:%{hiera('cinder_rabbit_password')}@%{hiera('service__address__rabbitmq_01')}:5672/cinder"
 
 # logging
-cinder::use_syslog:             true
-cinder::log_facility:           'LOG_LOCAL4'
+cinder::logging::log_facility:           'LOG_LOCAL4'
+cinder::logging::use_syslog:             true
 
 # telemetry
 cinder::ceilometer::notification_driver:          'messagingv2'
