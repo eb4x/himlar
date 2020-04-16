@@ -2,7 +2,7 @@
 class profile::openstack::network::controller(
   $manage_neutron_policies = true,
   $neutron_policy_path = '/etc/neutron/policy.json',
-  $neutron_nova_insecure = true,
+  $neutron_nova_insecure = false,
   $neutron_config = {},
   $manage_firewall = true,
   $firewall_extras = {}
