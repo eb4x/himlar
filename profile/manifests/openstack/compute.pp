@@ -8,7 +8,7 @@ class profile::openstack::compute(
   include ::nova::config
   include ::nova::placement
   include ::nova::network::neutron
-  include ::logging # test if it works
+  include ::nova::logging
 
   if $manage_telemetry {
     include ::profile::openstack::telemetry::polling
