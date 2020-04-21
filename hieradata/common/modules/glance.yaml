@@ -18,7 +18,7 @@ glance::api::enable_v2_api:                true
 glance::api::logging::log_facility:           'LOG_LOCAL3'
 glance::api::logging::use_syslog:             true
 
-glance::api::authtoken::www_auth_uri:         "%{hiera('endpoint__identity__internal')}"
+glance::api::authtoken::www_authenticate_uri: "%{hiera('endpoint__identity__internal')}"
 glance::api::authtoken::auth_url:             "%{hiera('endpoint__identity__admin')}/v3"
 glance::api::authtoken::username:             'glance'
 glance::api::authtoken::password:             "%{hiera('glance_api_password')}"
