@@ -27,7 +27,7 @@ cinder::keystone::authtoken::project_domain_name: "%{hiera('keystone__default__d
 cinder::keystone::authtoken::user_domain_name:    "%{hiera('keystone__default__domain')}"
 cinder::keystone::authtoken::project_name:        "%{hiera('keystone__service__project')}"
 
-cinder::volume::iscsi::iscsi_ip_address:  "%{hiera('service__address__cinder_ip')}"
+cinder::volume::iscsi::target_ip_address:       "%{hiera('service__address__cinder_ip')}"
 
 # keystone auth (node: identity)
 cinder::keystone::auth::auth_name:              'cinder'
