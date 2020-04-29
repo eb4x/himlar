@@ -188,3 +188,6 @@ nova::policy::policies:
   nova_disable_shelve:
     key:   'os_compute_api:servers:shelve'
     value: 'role:admin'
+  nova_create_zero_disk_flavor:
+    key:   'os_compute_api:servers:create:zero_disk_flavor'
+    value: 'role:imagebuilder'
