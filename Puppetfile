@@ -20,7 +20,7 @@ mod 'ntp',              :git => github + 'puppetlabs/puppetlabs-ntp',      :ref 
 mod 'resolv_conf',      :git => github + 'saz/puppet-resolv_conf',  :ref => 'v3.3.0'
 mod 'ssh',              :git => github + 'saz/puppet-ssh',          :tag => 'v5.0.0'
 mod 'sudo',             :git => github + 'saz/puppet-sudo',         :tag => 'v5.0.0'
-mod 'timezone',         :git => github + 'saz/puppet-timezone.git', :ref => 'v3.5.0'
+mod 'timezone',         :git => github + 'saz/puppet-timezone',     :tag => 'v5.2.1'
 
 mod 'debconf',          :git => github + 'smoeding/puppet-debconf',    :ref => 'v2.0.0'
 mod 'hostname',         :git => github + 'peopleware/puppet-hostname', :ref => '0.0.2'
