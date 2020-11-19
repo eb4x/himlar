@@ -10,7 +10,6 @@ github = 'https://github.com/'
 mod 'accounts',         :git => github + 'norcams/puppet-accounts',         :ref => '06955a9455'
 mod 'keyboard',         :git => github + 'norcams/puppet-keyboard',         :ref => '0.1.0'
 mod 'named_interfaces', :git => github + 'norcams/puppet-named_interfaces', :ref => '12482fc5c3'
-mod 'network',          :git => github + 'norcams/puppet-network',          :ref => '0bfc7cc2bc'
 
 #mod 'apt',             :git => github + 'puppetlabs/puppetlabs-apt',      :ref => '2.2.2'
 mod 'apt',              :git => github + 'puppetlabs/puppetlabs-apt',      :ref => '6.2.1'
@@ -27,6 +26,7 @@ mod 'debconf',          :git => github + 'smoeding/puppet-debconf',    :ref => '
 mod 'hostname',         :git => github + 'peopleware/puppet-hostname', :ref => '0.0.2'
 mod 'ipmi',             :git => github + 'jhoblitt/puppet-ipmi',       :ref => 'v2.3.0'
 mod 'kmod',             :git => github + 'camptocamp/puppet-kmod',     :ref => '2.3.1'
+mod 'network',          :git => github + 'example42/puppet-network',   :tag => 'v3.6.0'
 mod 'selinux',          :git => github + 'voxpupuli/puppet-selinux',   :ref => 'v1.3.0'
 
 #
