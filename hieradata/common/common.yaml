@@ -830,3 +830,8 @@ networks:
         ensure: present
         iniface: eth1
         outiface: eth0
+#
+# modules/puppet-accounts dummies
+#
+accounts::groups: {}
+accounts::usergroups: {}
