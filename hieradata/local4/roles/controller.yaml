@@ -1,0 +1,42 @@
+---
+named_interfaces::config:
+  mgmt:
+    - br-maas
+  trp:
+    - br-mgmt
+  transport:
+    - br-mgmt
+  service:
+    - br-mgmt
+#  public:
+#    - br3
+
+profile::base::common::manage_lvm: false
+profile::base::firewall::manage_firewall:     false
+# Turn off bird on controller until we use cumulus
+profile::openstack::network::calico::manage_bird: false
+
+profile::virtualization::libvirt::networks:
+  directnet:
+    ensure:          enabled
+    autostart:       true
+    forward_mode:    bridge
+    bridge:          br-maas
+  trpnet:
+    ensure:          enabled
+    autostart:       true
+    forward_mode:    bridge
+    bridge:          br-mgmt
+
+himlar_bootstrap::virt_install:
+  '%{location}-admin-01':
+    domain:          "%{hiera('domain_mgmt')}"
+    libvirt_pool:    'dirpool'
+    libvirt_network: 'directnet'
+    install_ip:      "%{hiera('netcfg_mgmt_netpart')}.11"
+    install_netmask: "%{hiera('netcfg_mgmt_netmask')}"
+    install_gateway: "%{hiera('netcfg_mgmt_gateway')}"
+    vm_vcpus:        2
+    vm_memory:       4096
+    vm_console:      false
+    use_dhcp:        false

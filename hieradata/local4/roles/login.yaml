@@ -1,0 +1,32 @@
+---
+include:
+  default:
+    - profile::bootstrap::himlar
+    - profile::network::nat
+
+# Manage NAT with iptables
+profile::base::firewall::manage_firewall:     false
+profile::network::services::manage_nat:       false
+profile::network::nat::enable_masquerade:     false
+profile::network::nat::source:                "%{::network_mgmt1}/%{::netmask_mgmt1}"
+
+# Himlar bootstrap
+profile::bootstrap::himlar::manage_bootstrap_scripts: true
+himlar_bootstrap::tftp_install:
+  '%{location}-controller-01':
+    domain:           "%{hiera('domain_mgmt')}"
+    dhcp_interface:   'maas'
+    dhcp_range_start: "%{hiera('netcfg_mgmt_netpart')}.200"
+    dhcp_range_end:   "%{hiera('netcfg_mgmt_netpart')}.250"
+    dhcp_gateway:     "%{hiera('netcfg_mgmt_gateway')}"
+    #macaddress:       'c4:34:6b:b5:ad:80' # mac address of controller-01
+    kernel_opts:      "console=tty1 console=ttyS0,115200n8"
+
+ssh::server::options:
+  AuthenticationMethods: 'publickey'
+
+named_interfaces::config:
+  mgmt:
+    - maas
+  public:
+    - internet

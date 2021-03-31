@@ -1,0 +1,76 @@
+---
+network::interfaces_hash:
+  'eno1':
+    onboot:      'yes'
+    devicetype:  'TeamPort'
+    team_master: 'team1'
+    team_port_config: '{ "prio" : 100 }'
+  'eno2':
+    onboot:      'yes'
+    devicetype:  'TeamPort'
+    team_master: 'team1'
+    team_port_config: '{ "prio" : 100 }'
+  'eno3':
+    onboot:      'yes'
+    devicetype:  'TeamPort'
+    team_master: 'team1'
+    team_port_config: '{ "prio" : 100 }'
+  'ens3f0':
+    onboot:      'yes'
+    devicetype:  'TeamPort'
+    team_master: 'team2'
+    team_port_config: '{ "prio" : 100 }'
+  'ens3f1':
+    onboot:      'yes'
+    devicetype:  'TeamPort'
+    team_master: 'team2'
+    team_port_config: '{ "prio" : 100 }'
+  'team1':
+    onboot:        'yes'
+    bridge:        'br-maas'
+    devicetype:    'Team'
+    team_config: >-
+      { "runner" : {
+          "name" : "lacp",
+          "active": true,
+          "fast_rate" : true,
+          "tx_hash": ["eth", "ipv4", "ipv6"],
+          "tx_balancer": { "name": "basic" }
+        },
+        "link_watch" : { "name" : "ethtool" } }
+  'team2':
+    onboot:        'yes'
+    devicetype:    'Team'
+    team_config: >-
+      { "runner" : {
+          "name" : "lacp",
+          "active": true,
+          "fast_rate" : true,
+          "tx_hash": ["eth", "ipv4", "ipv6"],
+          "tx_balancer": { "name": "basic" }
+        },
+        "link_watch" : { "name" : "ethtool" } }
+  'team2.10':
+    onboot:     'yes'
+    vlan:       'yes'
+    bridge:     'br-mgmt'
+  'br-maas':
+    dns1:       "%{hiera('netcfg_dns_server1')}"
+    dns2:       "%{hiera('netcfg_dns_server2')}"
+    domain:     "%{domain}"
+    defroute:   'yes'
+    peerdns:    'yes'
+    onboot:     'yes'
+    ipaddress:  "%{hiera('netcfg_mgmt_netpart')}.100"
+    netmask:    "%{hiera('netcfg_mgmt_netmask')}"
+    gateway:    "%{hiera('netcfg_mgmt_gateway')}"
+    type:       'Bridge'
+  'br-mgmt':
+    defroute:   'no'
+    onboot:     'yes'
+    ipaddress:  "%{hiera('netcfg_trp_netpart')}.100"
+    netmask:    "%{hiera('netcfg_trp_netmask')}"
+    type:       'Bridge'
+
+# Use controller-01 for himlar bootstrap
+profile::bootstrap::himlar::manage_bootstrap_scripts: true

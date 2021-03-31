@@ -1,0 +1,318 @@
+---
+include:
+  default:
+    - profile::monitoring::sensu::agent
+
+location_environment: 'local4'
+location_description: 'Local development environment'
+
+# Disable management of Dell repos and software
+profile::base::dell::manage_repos:      false
+profile::base::dell::manage_openmanage: false
+
+# renaming doesn't work well, use funky names
+profile::base::network::net_ifnames:    false
+
+domain_frontend:      'iaas.intern'
+domain_public:        'local4.iaas.intern'
+domain_trp:           'trp.local4.iaas.intern'
+domain_mgmt:          'mgmt.local4.iaas.intern'
+domain_oob:           'oob.local4.iaas.intern'
+
+reverse_mgmt:    '3.168.192.in-addr.arpa'
+reverse_mgmt_c0: '3.168.192.in-addr.arpa'
+reverse_mgmt_c1: '1.16.172.in-addr.arpa'
+reverse_mgmt_c2: '2.16.172.in-addr.arpa'
+reverse_mgmt_c3: '3.16.172.in-addr.arpa'
+reverse_mgmt_c4: '4.16.172.in-addr.arpa'
+reverse_mgmt_c5: '5.16.172.in-addr.arpa'
+reverse_mgmt_c6: '6.16.172.in-addr.arpa'
+reverse_mgmt_c7: '7.16.172.in-addr.arpa'
+
+reverse_trp:    '236.29.172.in-addr.arpa'
+#reverse_trp_c0: '236.29.172.in-addr.arpa'
+#reverse_trp_c1: '1.16.172.in-addr.arpa'
+#reverse_trp_c2: '2.16.172.in-addr.arpa'
+#reverse_trp_c3: '3.16.172.in-addr.arpa'
+#reverse_trp_c4: '4.16.172.in-addr.arpa'
+#reverse_trp_c5: '5.16.172.in-addr.arpa'
+#reverse_trp_c6: '6.16.172.in-addr.arpa'
+#reverse_trp_c7: '7.16.172.in-addr.arpa'
+
+reverse_public:       '12.168.192.in-addr.arpa'
+
+# These should only be used to configure network in nodes!
+netcfg_mgmt_netpart:    '192.168.3'
+netcfg_mgmt_netmask:    '255.255.255.0'
+netcfg_mgmt_gateway:    '192.168.3.1'
+netcfg_mgmt_net_c0:     '192.168.3'
+netcfg_mgmt_net_c1:     '172.16.1'
+netcfg_mgmt_net_c2:     '172.16.2'
+netcfg_mgmt_net_c3:     '172.16.3'
+netcfg_mgmt_net_c4:     '172.16.4'
+netcfg_mgmt_net_c5:     '172.16.5'
+netcfg_mgmt_net_c6:     '172.16.6'
+netcfg_mgmt_net_c7:     '172.16.7'
+
+netcfg_trp_netpart:     '172.29.236'
+netcfg_trp_netmask:     '255.255.252.0'
+netcfg_trp_gateway:     '172.29.236.1'
+netcfg_trp_gateway6:    'fd00::1'
+netcfg_trp_netpart6:    'fd00'
+netcfg_trp_netmask6:    '64'
+netcfg_trp_net_c0:      '172.31.12'
+netcfg_trp_net_c1:      '172.31.13'
+netcfg_trp_net_c2:      '172.31.14'
+netcfg_trp_net_c3:      '172.31.15'
+netcfg_trp_net_c4:      '172.31.16'
+netcfg_trp_net_c5:      '172.31.17'
+netcfg_trp_net_c6:      '172.31.18'
+netcfg_trp_net_c7:      '172.31.19'
+
+netcfg_live_netpart:    '172.31.15'
+netcfg_live_netmask:    '255.255.255.0'
+
+netcfg_public_netmask:  '255.255.255.0'
+netcfg_public_netpart:  '192.168.15'
+netcfg_public_netpart6: 'fd01'
+netcfg_public_netmask6: '64'
+
+netcfg_dns_server1:     '192.168.3.11'
+netcfg_dns_server2:     '8.8.8.8'
+netcfg_dns_search:      "%{hiera('domain_mgmt')} %{hiera('domain_public')}"
+netcfg_priv_gateway:    '172.31.15.26'
+netcfg_priv_network:    '10.0.243.0/24'
+netcfg_pub_natgw:       '192.168.15.248'
+netcfg_trp_rr:
+  rr1:
+    peer_ipv4: '172.31.15.1'
+
+profile::openstack::volume::api::enable_testbackend:     'true'
+
+# We need to allow both trafic from mgmt (nat via login) and public net
+allow_from_network:
+  - "%{hiera('netcfg_trp_netpart')}.0/%{hiera('netcfg_trp_netmask')}"
+  - "%{hiera('netcfg_public_netpart')}.0/24"
+  - '192.168.122.0/24'
+#  - '192.168.15.0/24'
+#  - '192.168.115.0/24'
+
+public__ip__ns:             "%{hiera('netcfg_public_netpart')}.251"
+public__ipv6__ns:           "%{hiera('netcfg_public_netpart6')}::251"
+public__ip__resolver:       "%{hiera('netcfg_public_netpart')}.252"
+public__ipv6__resolver:     "%{hiera('netcfg_public_netpart6')}::251"
+
+endpoint_protocol:      'https'
+
+profile::network::services::dns_options:
+  CNAME:
+    default:
+      ttl: 600
+      keyfile: "/etc/rndc.key"
+      server: "%{hiera('netcfg_mgmt_netpart')}.11"
+  A:
+    default:
+      ttl: 600
+      keyfile: "/etc/rndc.key"
+      server: "%{hiera('netcfg_mgmt_netpart')}.11"
+  PTR:
+    default:
+      ttl: 600
+      keyfile: "/etc/rndc.key"
+      server: "%{hiera('netcfg_mgmt_netpart')}.11"
+
+profile::network::services::dns_records:
+  A:
+    # public
+    "dashboard.%{hiera('domain_frontend')}":              "%{hiera('netcfg_public_netpart')}.252"
+    "api.%{hiera('domain_frontend')}":                    "%{hiera('netcfg_public_netpart')}.250"
+    "api.%{hiera('domain_public')}":                      "%{hiera('netcfg_public_netpart')}.250"
+    "access.%{hiera('domain_frontend')}":                 "%{hiera('netcfg_public_netpart')}.250"
+    "console.%{hiera('domain_public')}":                  "%{hiera('netcfg_public_netpart')}.250"
+    "identity.api.%{hiera('domain_public')}":             "%{hiera('netcfg_public_netpart')}.250"
+    "image.api.%{hiera('domain_public')}":                "%{hiera('netcfg_public_netpart')}.250"
+    "network.api.%{hiera('domain_public')}":              "%{hiera('netcfg_public_netpart')}.250"
+    "compute.api.%{hiera('domain_public')}":              "%{hiera('netcfg_public_netpart')}.250"
+    "placement.api.%{hiera('domain_public')}":            "%{hiera('netcfg_public_netpart')}.250"
+    "volume.api.%{hiera('domain_public')}":               "%{hiera('netcfg_public_netpart')}.250"
+    "object.api.%{hiera('domain_public')}":               "%{hiera('netcfg_public_netpart')}.250"
+    "metric.api.%{hiera('domain_public')}":               "%{hiera('netcfg_public_netpart')}.250"
+    "dns.api.%{hiera('domain_public')}":                  "%{hiera('netcfg_public_netpart')}.250"
+    "ns.%{hiera('domain_public')}":                       "%{hiera('netcfg_public_netpart')}.251"
+    # mgmt
+    "%{::location}-login-01.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_netpart')}.8"
+    "%{::location}-controller-00.%{hiera('domain_mgmt')}":  "%{hiera('netcfg_mgmt_netpart')}.99"
+  CNAME:
+    "proxy.%{hiera('domain_mgmt')}":                      "%{location}-proxy-01.%{hiera('domain_mgmt')}"
+
+profile::network::services::dhcp_reservation:
+  local4-leaf-01:
+    mac: '00:0c:29:ff:be:2f'
+    ip:  '172.31.4.1'
+
+ceph::profile::params::mon_initial_members:         'local4-cephmon-01, local4-cephmon-02, local4-cephmon-03'
+ceph::profile::params::mon_host:                    '172.31.12.91, 172.31.12.92, 172.31.12.93'
+ceph::profile::params::cluster_network:             '172.31.12.0/24'
+ceph::profile::params::public_network:              '172.31.12.0/24'
+
+profile::openstack::volume::manage_rbd: true
+profile::openstack::compute::hypervisor::manage_libvirt_rbd: true
+
+# If backend != file, you must explicitly define stores in %location/modules/glance.yaml
+profile::openstack::image::api::backend: 'rbd'
+
+#
+## Secret data which for other environments are stored ooutside of this data tree
+#
+
+# ceph.yaml
+ceph_storage_client_fsid:                           'cc91fb3d-6b18-4640-9743-1b9bb6b97d86'
+ceph_storage_client_mgr_key:                        'AQAOCudaiWQmKxAAjj6i10gfW887T2dYOCNLvw=='
+ceph_storage_client_mon_key:                        'AQBiBuda74XZIhAANsxa31M5wDiLenqEMqjH6g=='
+ceph_storage_client_mds_key:                        'AQAei5dbrrNpDhAA7251s/ZxmXNZvvV0pSOIxA=='
+ceph_storage_client_admin_key:                      'AQCKBudajsWkDxAAbPpCrtTiZrwhjX0VsG7i6Q=='
+ceph_storage_client_bootstrap_osd_key:              'AQCpBudas7f5CRAAoWjwsLyPafAoLAOVA0IvDQ=='
+ceph_storage_client_bootstrap_mds_key:              'AQC9B+daWlaNCRAA1thFoG/FasdX4hy8QyYMLw=='
+ceph_storage_client_glance_key:                     'AQDHCOdar7nQMRAAZ2l4hxy7PHWKiT2bXAGXEg=='
+ceph_storage_client_cinder_key:                     'AQDvCOdaJ35QHRAAm1wr52RrldB4TareRfKdww=='
+libvirt_rbd_secret_uuid:                            '38d88163-3058-436e-a214-085214c6fa78'
+
+# service user api password
+keystone_admin_password:                            'admin_pass'
+cinder_api_password:                                'cinder_pass'
+glance_api_password:                                'glance_pass'
+neutron_api_password:                               'neutron_pass'
+nova_api_password:                                  'nova_pass'
+nova_placement_password:                            'nova_pass'
+gnocchi_api_password:                               'gnocchi'
+ceilometer_api_password:                            'ceilometer_pass'
+access_api_password:                                'access_pass'
+designate_api_password:                             'designate_pass'
+radosgw_api_password:                               'radosgw_pass'
+
+# rabbitmq
+rabbitmq::default_pass:                             'guest'
+rabbitmq::erlang_cookie:                            'Himlardev667'
+access_rabbit_password:                             'access_pass'
+himlarcli_rabbit_password:                          'himlarcli'
+
+# cinder.yaml
+cinder::db::mysql::password:                        'cinder_pass'
+cinder_rabbit_password:                             'cinder_guest'
+
+# foreman.yaml
+foreman::admin_password:                            'changeme'
+
+# glance.yaml
+glance::db::mysql::password:                        'glance_pass'
+
+# horizon.yaml
+horizon::secret_key:                                'horizon_secret'
+horizon_db_password:                                'horizon_pass'
+
+# keystone.yaml
+keystone::db::mysql::password:                      'key_pass'
+keystone::admin_token:                              'admintoken'
+
+# master.yaml
+rbd_volumes_rbd_secret_uuid:                        'AQBypF1V2JYiChAA2qYbjM6jbXJBMmpXPkvwBg=='
+
+# mysql.yaml
+mysql::server::root_password:                       'test123'
+
+# neutron.yaml
+neutron_rabbit_password:                            'neutron_guest'
+neutron::db::mysql::password:                       'neutron_pass'
+neutron::agents::metadata::shared_secret:           'a_secret'
+
+# nova.yaml
+nova::db::mysql::password:                          'nova_pass'
+nova::db::mysql_api::password:                      'nova_api_pass'
+nova::db::mysql_placement::password:                'nova_placement_pass'
+nova::api::neutron_metadata_proxy_shared_secret:    'a_secret'
+nova_rabbit_password:                               'nova_quest'
+
+# designate.yaml
+designate::db::mysql::password:                     'designate_pass'
+designate::rabbit_password:                         'designate_guest'
+
+# imagebuilder
+imagebuilder_password:                              'imagebuilder_pass'
+
+# sensu.yaml
+sensu_rabbit_password:                              'sensu_guest'
+sensu_api_password:                                 'sensu'
+graphite_secret_key:                                'graphite_pass'
+sensu_mysql_password:                               'sensu'
+grafana_admin_password:                             'changeme'
+local_rabbit_password:                              'local'
+
+# telemetry/metrics
+gnocchi::db::mysql::password:                       'gnocchi_pass'
+ceilometer::db::mysql::password:                    'ceilometer_pass'
+ceilometer::telemetry_secret:                       'ceilometer'
+ceilometer_rabbit_password:                         'ceilometer'
+status_metric_password:                             'status_pass'
+monitor_metric_password:                            'monitor_pass'
+
+# object
+swift::swift_hash_path_suffix:                      'shared_secret'
+swift_api_password:                                 'swift_pass'
+dispersion_api_password:                            'dispersion_pass'
+
+# report
+report_db_password:                                 'report_pass'
+
+# The root user password
+accounts::root_user::password:                      '$6$xF$XRMOGxiWHvFILT7VTImAnHzoUhm7ZdNtyQS/fpR4gPVS11XcaFnbTFuNKBmSDhWisog36CgDbQ55gRJJCKEjT/'
+
+# rndc keys
+profile::dns::rndc_key::rndc_secret_admin: '5n5fC0m42JovwO9PJMTQYaNP7j5UcRjmL0Lsq4JXz8eZIrGILt/5Lo+MVzdr31GbYn9C/fPEe1Nvbjs8NgTG6w=='
+profile::dns::rndc_key::rndc_secret_mdns:  'CIGrQ5sAnoaQhRiDSXX+WUGg9Z0tiphT4BCKbp9A1ceOUr5hqAPiqNp/UHoApIXmIAgni+v90swVPmDfETsLdQ=='
+
+profile::openstack::resource::networks:
+  public:
+    name: 'public'
+    admin_state_up: true
+    shared: true
+    tenant_name: 'openstack'
+    provider_network_type: 'local'
+
+profile::openstack::resource::subnets:
+  public:
+    name: 'public'
+    cidr: "%{hiera('netcfg_public_netpart')}.0/24"
+    ip_version: '4'
+    allocation_pools:
+      - "start=%{hiera('netcfg_public_netpart')}.20,end=%{hiera('netcfg_public_netpart')}.180"
+    gateway_ip: "%{hiera('netcfg_public_netpart')}.1"
+    dns_nameservers:
+      - '129.177.6.54'
+      - '129.177.12.31'
+    network_name: 'public'
+    tenant_name: 'openstack'
+
+valid_location_tags:
+  - local4
+
+#
+# Network configuration data
+#
+networks:
+  local4:
+    domain:
+      mgmt: mgmt.local4.iaas.intern
+    subnet:
+      mgmt: 192.168.3.0/24
+    dhcp:
+      mgmt:
+        ensure: present
+        inferface: maas
+        start_offset: 150
+        end_offset: 199
+        lease: 43200
+    nat:
+      mgmt:
+        ensure: present
+        iniface: maas
+        outiface: internet

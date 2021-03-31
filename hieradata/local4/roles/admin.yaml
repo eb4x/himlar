@@ -1,0 +1,26 @@
+---
+include:
+  default:
+    - profile::network::dns_extra_zone
+
+# Add in addition to mgmt.local1.iaas.uib.no
+profile::network::dns_extra_zone::zone:
+  - "%{hiera('domain_trp')}"
+  - "%{hiera('domain_public')}"
+  - "%{hiera('domain_frontend')}"
+#  - "%{hiera('reverse_mgmt_c0')}"
+  - "%{hiera('reverse_mgmt_c1')}"
+  - "%{hiera('reverse_mgmt_c2')}"
+  - "%{hiera('reverse_mgmt_c3')}"
+  - "%{hiera('reverse_mgmt_c4')}"
+  - "%{hiera('reverse_mgmt_c5')}"
+  - "%{hiera('reverse_mgmt_c6')}"
+  - "%{hiera('reverse_mgmt_c7')}"
+
+profile::network::services::manage_dns_records: true
+
+# Bind utils will be installed with foreman::dns
+profile::base::common::packages:
+  'bind-utils': { ensure: absent }
+
+profile::application::foreman::push_facts:    true

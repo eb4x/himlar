@@ -1,0 +1,12 @@
+---
+keystone::debug:                          true
+
+# FIXME move to common
+keystone::notification_driver:            'messagingv2'
+keystone::notification_format:            'cadf'
+keystone::default_transport_url:          "%{hiera('service__transport__url')}"
+
+# encryption (node: indentity)
+# FIXME: setup and rotate should only be run on one identity server!
+keystone::enable_credential_setup:        true
+keystone::credential_key_repository:      '/etc/keystone/credential-keys'

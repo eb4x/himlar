@@ -1,0 +1,24 @@
+---
+# This works in UiB. Should be posible to override in secrets for other locations
+profile::application::himlarcli::smtp:          'smtp.uib.no'
+profile::application::himlarcli::from_addr:     'no-reply@uib.no'
+profile::application::himlarcli::ldap_server:   'ldap.uib.no'
+profile::application::himlarcli::ldap_base_dn:  'dc=uib,dc=no'
+
+profile::application::openssl::catrust::ca_cert: '/etc/pki/tls/certs/cachain.pem'
+
+profile::application::himlarcli::cacert:        '/etc/pki/tls/certs/cachain.pem'
+profile::openstack::openrc::cacert:             '/etc/pki/tls/certs/cachain.pem'
+
+yum_base_mirror:                                'https://download.iaas.uio.no/uh-iaas/test'
+profile::base::yumrepo::repo_hash:
+  uh-iaas-nonfree:
+    ensure:         absent
+    descr:          'UH-IaaS repo non-free'
+    baseurl:        'https://download.iaas.uio.no/uh-iaas/nonfree/yum-nonfree'
+    gpgcheck:       0
+
+profile::openstack::openrc::auth_url:           "%{hiera('endpoint__identity__internal')}"
+
+# Enable insecure ssl checks
+sensu_ssl_cachain:  '-k'
