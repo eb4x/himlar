@@ -75,54 +75,46 @@ class profile::application::foreman(
   }
 
   if $manage_firewall {
-    profile::firewall::rule { '190 foreman-http accept tcp':
-      dport  => 80,
-      extras => $firewall_extras['http']
+
+    firewall { '190 foreman accept http/https':
+      dport  => [80, 443],
+      #extras => $firewall_extras['http']
+      #extras => $firewall_extras['https']
     }
 
-    profile::firewall::rule { '191 foreman-https accept tcp':
-      dport  => 443,
-      extras => $firewall_extras['https']
-    }
-
-    profile::firewall::rule { '192 foreman-puppet accept tcp':
+    firewall { '192 foreman accept puppet':
       dport  => 8140,
-      extras => $firewall_extras['puppet']
+      #extras => $firewall_extras['puppet']
     }
 
-    profile::firewall::rule { '193 foreman-dns accept udp':
+    firewall { '193 foreman accept dns':
       dport  => 53,
-      proto  => 'udp',
-      extras => $firewall_extras['dns']
+      proto  => ['tcp', 'udp'],
+      #extras => $firewall_extras['dns']
     }
 
-    profile::firewall::rule { '194 foreman-dns accept tcp':
-      dport  => 53,
-      extras => $firewall_extras['dns']
-    }
-
-    profile::firewall::rule { '195 foreman-dhcp accept udp in':
+    firewall { '195 foreman accept dhcp in':
       dport  => 67,
       proto  => 'udp',
-      extras => $firewall_extras['dhcp']
+      #extras => $firewall_extras['dhcp']
     }
 
-    profile::firewall::rule { '196 foreman-dhcp accept udp out':
+    firewall { '196 foreman accept dhcp out':
       dport  => 68,
       proto  => 'udp',
       chain  => 'OUTPUT',
-      extras => $firewall_extras['dhcp']
+      #extras => $firewall_extras['dhcp']
     }
 
-    profile::firewall::rule { '197 foreman-tftp accept tcp':
+    firewall { '197 foreman accept tftp':
       dport  => 69,
       proto  => 'udp',
-      extras => $firewall_extras['tftp']
+      #extras => $firewall_extras['tftp']
     }
 
-    profile::firewall::rule { '197 foreman-proxy accept tcp':
+    firewall { '197 foreman accept proxy_https':
       dport  => 8443,
-      extras => $firewall_extras['proxy']
+      #extras => $firewall_extras['proxy']
     }
   }
 }
