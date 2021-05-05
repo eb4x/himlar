@@ -27,7 +27,12 @@ class profile::application::foreman(
   $push_facts      = false,
 ) {
 
+  #class { '::foreman::repo':
+  #  repo => '2.3',
+  #}
+
   include ::puppet
+
   include ::foreman
   include ::foreman_proxy
 
